@@ -8,7 +8,8 @@ ENV ZNC_VERSION 1.6.1
 RUN apt-get update \
     && apt-get install -y sudo wget build-essential libssl-dev libperl-dev \
                pkg-config swig3.0 libicu-dev ca-certificates python python3 \
-	       python3-dev\
+	       python3-dev python3-pip\
+    && pip3 install requests \
     && mkdir -p /src \
     && cd /src \
     && wget "http://znc.in/releases/archive/znc-${ZNC_VERSION}.tar.gz" \
@@ -20,8 +21,8 @@ RUN apt-get update \
     && rm -rf /src* /var/lib/apt/lists/* /tmp/* /var/tmp/* \
     && apt-get autoremove -y \
     && apt-get clean \
+    && useradd znc
 
-RUN useradd znc
 ADD docker-entrypoint.sh /entrypoint.sh
 ADD znc.conf.default /znc.conf.default
 RUN chmod 644 /znc.conf.default
